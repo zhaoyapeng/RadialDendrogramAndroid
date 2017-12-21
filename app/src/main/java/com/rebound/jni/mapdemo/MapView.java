@@ -137,6 +137,8 @@ public class MapView extends View {
 
     boolean isDrawFinish = false;
 
+    private Matrix invertMatrix = new Matrix();
+    ;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -144,6 +146,7 @@ public class MapView extends View {
         canvas.save();
         canvas.translate(mTran[0], mTran[1]);
         canvas.scale(scaleCount, scaleCount, cenPointF.x, cenPointF.y);
+        canvas.getMatrix().invert(invertMatrix);
 
         for (int j = 0; j < secondList.size(); j++) {
             PointFModel pm = secondList.get(j);
@@ -214,6 +217,12 @@ public class MapView extends View {
                     break;
                 }
 
+                float[] f = {event.getX(), event.getY()};
+                invertMatrix.mapPoints(f);
+                RectFModel rectFModel = isInRect(f[0], f[1], rectfList);
+                if (rectFModel != null) {
+                    Toast.makeText(mContext, rectFModel.tag, Toast.LENGTH_SHORT).show();
+                }
         }
 
         switch (event.getPointerCount()) {
